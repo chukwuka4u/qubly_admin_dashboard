@@ -24,8 +24,8 @@ const QueuesPage = () => {
         <PageContainer title="Queue Page" description="this is Sample page">
             <DashboardCard title="Queue Page">
                 <Typography>{queues.length} queues</Typography>
-                {queues.map((q) =>
-                    <a href='/queues/attend'>
+                {queues.map((q, i) =>
+                    <a key={i} href='/queues/attend'>
                         <QueueCard q={q} />
                     </a>
                 )}

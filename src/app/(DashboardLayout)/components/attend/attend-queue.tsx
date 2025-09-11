@@ -35,8 +35,8 @@ const AttendQueue = () => {
                     }}
                 >
                     {
-                        new Array(6).fill(0).map(() =>
-                            <TimelineItem>
+                        new Array(6).fill(0).map((v, i) =>
+                            <TimelineItem key={i}>
                                 <TimelineOppositeContent>09:30 am</TimelineOppositeContent>
                                 <TimelineSeparator>
                                     <TimelineDot color="primary" variant="outlined" />

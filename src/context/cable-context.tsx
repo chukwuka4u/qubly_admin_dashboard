@@ -1,7 +1,8 @@
 "use client"
-import { Cable, createConsumer } from "@rails/actioncable"
-import { ReactNode, createContext } from "react"
+import { createConsumer } from "@rails/actioncable"
+import { createContext } from "react"
 
+type Cable = ReturnType<typeof createConsumer>;
 type CableContextProp = {
     cable: Cable
 }

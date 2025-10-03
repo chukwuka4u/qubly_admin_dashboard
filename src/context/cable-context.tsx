@@ -9,15 +9,14 @@ type CableContextProp = {
 const CableContext = createContext<CableContextProp | undefined>(undefined)
 
 const CableProvider = ({
-    children,
+    children
 }: Readonly<{
-    children: React.ReactNode;
+    children: React.ReactNode
 }>) => {
-    const cableurl = 'ws://localhost:3000/cable'//'wss://queue-api-48vb.onrender.com/cable'
+    const cableurl = 'wss://queue-api-48vb.onrender.com/cable' //'ws://localhost:3000/cable'
     const val: CableContextProp = {
         cable: createConsumer(cableurl)
     };
-
 
     return (
         <CableContext.Provider value={val}>
@@ -25,6 +24,5 @@ const CableProvider = ({
         </CableContext.Provider>
     )
 }
-
 
 export { CableContext, CableProvider };

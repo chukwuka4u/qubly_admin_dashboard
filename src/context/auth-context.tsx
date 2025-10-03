@@ -20,7 +20,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const token = getToken();
         if (token) {
-            router.push("/")
             const name = getAdminName()
             name && setAdmin(name!.toString())
         }

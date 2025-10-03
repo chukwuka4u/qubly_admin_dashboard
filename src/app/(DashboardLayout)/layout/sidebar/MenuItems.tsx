@@ -1,11 +1,5 @@
 import {
-  IconAperture,
-  IconCopy,
   IconLayoutDashboard,
-  IconLogin,
-  IconMoodHappy,
-  IconTypography,
-  IconUserPlus,
   IconPlus,
   IconUsers,
   IconLogout,

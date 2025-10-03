@@ -42,8 +42,6 @@ async function authenticate(email, password) {
 }
 async function get_admin_pos_queues() {
     const token = getToken()
-    console.log(getToken())
-    console.log("token: ", token)
     const auth = {
         "Authorization": "Bearer " + token,
         "Seeker": "admin",
@@ -61,11 +59,20 @@ async function create_new_pos_queue(form) {
 
     const params = { pos_queue: {} }
     params.pos_queue = form
-    console.log(params)
     const data = await req('POST', 'pos_queues', auth, form)
     console.log(data)
     return data ? true : false;
 
 }
 
-export { new_admin, authenticate, get_admin_pos_queues, create_new_pos_queue }
+async function attend_queue(id) {
+    const token = getToken()
+    const auth = {
+        "Authorization": "Bearer " + token,
+        "Seeker": "admin",
+    }
+    const data = await req('GET', `pos_queues/${id}/active_queue`, auth, undefined)
+    return data
+}
+
+export { new_admin, authenticate, get_admin_pos_queues, create_new_pos_queue, attend_queue }

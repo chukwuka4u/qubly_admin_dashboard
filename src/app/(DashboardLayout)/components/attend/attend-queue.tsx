@@ -1,5 +1,5 @@
-
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import { QueueMember } from '@/types/queue_member';
 import {
     Timeline,
     TimelineItem,
@@ -11,10 +11,12 @@ import {
     timelineOppositeContentClasses,
 } from '@mui/lab';
 import { Button, Link, Typography } from '@mui/material';
+import { isEmpty } from 'lodash';
 
-const AttendQueue = () => {
+
+const AttendQueue = ({ memberList, id }: { memberList: QueueMember[] | string, id: string }) => {
     return (
-        <DashboardCard title="attending to queue #w1234123523432">
+        <DashboardCard title={"attending to queue #" + id}>
             <>
                 <Timeline
                     className="theme-timeline"
@@ -35,17 +37,22 @@ const AttendQueue = () => {
                     }}
                 >
                     {
-                        new Array(6).fill(0).map((v, i) =>
-                            <TimelineItem key={i}>
-                                <TimelineOppositeContent>09:30 am</TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    <TimelineDot color="primary" variant="outlined" />
-                                    <TimelineConnector />
-                                </TimelineSeparator>
+                        typeof (memberList) === "string" ?
+                            <Typography sx={{ textAlign: "center" }}>
+                                {memberList}
+                            </Typography>
+                            :
+                            memberList.map((v, i) =>
+                                <TimelineItem key={i}>
+                                    <TimelineOppositeContent>09:30 am</TimelineOppositeContent>
+                                    <TimelineSeparator>
+                                        <TimelineDot color="primary" variant="outlined" />
+                                        <TimelineConnector />
+                                    </TimelineSeparator>
 
-                                <TimelineContent> <span style={{ marginRight: 100, marginLeft: 100 }}>1</span>Payment received from John Doe of $385.90</TimelineContent>
-                            </TimelineItem>
-                        )
+                                    <TimelineContent> <span style={{ marginRight: 100, marginLeft: 100 }}>{v.position}</span>Payment received from John Doe of $385.90</TimelineContent>
+                                </TimelineItem>
+                            )
                     }
                 </Timeline>
                 <Button variant="contained" component={Link} href="/authentication/login" disableElevation color="primary" >

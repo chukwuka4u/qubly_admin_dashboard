@@ -28,6 +28,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     email: "",
     password: ""
   });
+  const [submitting, setSubmitting] = React.useState(false)
 
   const router = useRouter();
   async function submit() {
@@ -35,10 +36,19 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     if (!form.email || !form.password)
       window.alert("fields can't be empty")
     else {
-      const result = await signIn(form)
-      console.log(result)
-      router.push("/")
-      console.log(admin)
+      try {
+        setSubmitting(true)
+        const result = await signIn(form)
+        console.log(result)
+        router.push("/")
+        console.log(admin)
+      }
+      catch (e) {
+        console.log(e)
+      }
+      finally {
+        setSubmitting(false)
+      }
     }
   }
 
@@ -109,10 +119,14 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       </Stack>
       <Box>
         <Button
+          sx={{
+            opacity: submitting ? 0.5 : 1.0,
+          }}
           color="primary"
           variant="contained"
           size="large"
           fullWidth
+          loading={submitting}
           onClick={() => submit()}
         >
           Sign In

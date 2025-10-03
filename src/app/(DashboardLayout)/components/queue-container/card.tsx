@@ -42,17 +42,6 @@ export default function QueueCard(props: any) {
                         Created:{props.q.created_at}
                     </Typography>
                 </CardContent>
-                {/* <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-                    <IconButton aria-label="previous">
-                        {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
-                    </IconButton>
-                    <IconButton aria-label="play/pause">
-                        <PlayArrowIcon sx={{ height: 38, width: 38 }} />
-                    </IconButton>
-                    <IconButton aria-label="next">
-                        {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
-                    </IconButton>
-                </Box> */}
             </Box>
             <Select sx={{ height: 15, width: 20 }}>
                 {cardAct.map((v, i) =>

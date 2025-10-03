@@ -1,8 +1,7 @@
 import React from "react";
 import Menuitems from "./MenuItems";
-import { Box, Button, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import {
-  Logo,
   Sidebar as MUI_Sidebar,
   Menu,
   MenuItem,
@@ -11,16 +10,10 @@ import {
 import { IconPoint } from '@tabler/icons-react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Upgrade } from "./Updrade";
-import { useAuth } from "@/context/auth-context";
 
 
 const renderMenuItems = (items: any, pathDirect: any) => {
 
-  const { signOut } = useAuth();
-  const submit = async () => {
-    await signOut()
-  }
 
   return items.map((item: any) => {
 

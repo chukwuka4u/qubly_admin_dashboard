@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import Link from 'next/link';
+import { GoogleMap, useJsApiLoader, Autocomplete, Libraries } from '@react-google-maps/api';
+import { isValidEmail, isValidPassword } from "@/constants/verify-inputs"
 
 import CustomTextField from '@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField';
 import { Stack } from '@mui/system';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
+
+
+const libraries = ['places'] as Libraries
 
 interface registerType {
     title?: string;
@@ -25,13 +29,27 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
         password_confirmation: "",
         ranking: "admin"
     });
+
+    const { isLoaded, loadError } = useJsApiLoader({
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY!,
+        libraries,
+    });
+
+    const autocompleteRef = useRef<google.maps.places.Autocomplete | undefined>(undefined);
+    const inputRef = useRef<HTMLInputElement>(null)
+
     const [submitting, setSubmitting] = React.useState(false)
 
     const router = useRouter();
     async function submit() {
-        console.log(admin, "initial")
         if (!form.admin_name || !form.organization || !form.address || !form.email || !form.password || !form.password_confirmation || !form.ranking)
             window.alert("fields can't be empty")
+        else if (!isValidEmail()) {
+            window.alert("invalid email format")
+        }
+        else if (!isValidPassword()) {
+            window.alert("password must be 8 digits with one symbol, one number and one capital letter")
+        }
         else {
             try {
                 setSubmitting(true)
@@ -63,20 +81,53 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
                 <Stack mb={3}>
                     <Typography variant="subtitle1"
                         fontWeight={600} component="label" htmlFor='admin_name' mb="5px">Admin Name</Typography>
-                    <CustomTextField onChange={(e: any) => {
+                    <CustomTextField value={form.admin_name} placeholder="your preferred admin name" onChange={(e: any) => {
                         setForm({ ...form, admin_name: e.target.value })
                     }} id="admin_name" variant="outlined" fullWidth />
-
-                    <Typography variant="subtitle1"
-                        fontWeight={600} component="label" htmlFor='organization' mb="5px" mt="25px">Organization</Typography>
-                    <CustomTextField onChange={(e: any) => {
-                        setForm({ ...form, organization: e.target.value })
-                    }} id="organization" variant="outlined" fullWidth />
                     <Typography variant="subtitle1"
                         fontWeight={600} component="label" htmlFor='address' mb="5px" mt="25px">Address</Typography>
-                    <CustomTextField onChange={(e: any) => {
-                        setForm({ ...form, address: e.target.value })
-                    }} id="address" variant="outlined" fullWidth />
+                    {
+                        isLoaded &&
+                        <Autocomplete
+                            fields={["adr_address", "name", "formatted_address"]}
+                            types={["establishment"]}
+                            onLoad={ref => (autocompleteRef.current = ref)}
+                            onPlaceChanged={() => {
+                                const event = new Event('input', { bubbles: false });
+                                inputRef.current!.dispatchEvent(event);
+                                console.log(inputRef.current!.value)
+                                setForm({ ...form, address: inputRef.current!.value, organization: autocompleteRef.current!.getPlace().name! })
+                                // console.log(form.address)
+                            }}
+                        >
+
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                placeholder="search for your organization"
+                                style={{
+                                    width: '100%',
+                                    height: '50px',
+                                    borderWidth: '1px',
+                                    borderColor: 'rgb(229, 231, 235)',
+                                    borderRadius: '0.3rem', // rounded-lg
+                                    paddingLeft: '0.5rem',  // px-2 → padding-inline: 0.5rem
+                                    paddingRight: '0.5rem',
+                                    marginTop: '12px',      // my-[12px]
+                                    marginBottom: '12px'
+                                }}
+                                onChange={(e) => {
+                                    // console.log(e.target.value)
+                                }}
+                            />
+                        </Autocomplete>
+                    }
+                    <Typography variant="subtitle1"
+                        fontWeight={600} component="label" htmlFor='organization' mb="5px" mt="25px">Organization</Typography>
+                    <CustomTextField value={form.organization} onChange={(e: any) => {
+                        setForm({ ...form, organization: e.target.value })
+                    }} id="organization" variant="outlined" fullWidth />
+
                     <Typography variant="subtitle1"
                         fontWeight={600} component="label" htmlFor='email' mb="5px" mt="25px">Email Address</Typography>
                     <CustomTextField onChange={(e: any) => {
@@ -114,3 +165,4 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
 }
 
 export default AuthRegister;
+

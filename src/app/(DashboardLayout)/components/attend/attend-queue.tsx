@@ -1,4 +1,5 @@
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import { CableContext } from '@/context/cable-context';
 import { QueueMember } from '@/types/queue_member';
 import {
     Timeline,
@@ -11,10 +12,10 @@ import {
     timelineOppositeContentClasses,
 } from '@mui/lab';
 import { Button, Link, Typography } from '@mui/material';
-import { isEmpty } from 'lodash';
 
 
 const AttendQueue = ({ memberList, id }: { memberList: QueueMember[] | string, id: string }) => {
+
     return (
         <DashboardCard title={"attending to queue #" + id}>
             <>

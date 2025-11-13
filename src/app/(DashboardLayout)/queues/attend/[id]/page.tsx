@@ -17,32 +17,43 @@ const AttendPage = ({ params }: { params: any }) => {
     const [channel, setChannel] = useState<Subscription & { connected: () => void; disconnected: () => void; received: (data: unknown) => void; }>();
     // subscribe the queue pos_queue_{this queue id}
 
+
     useEffect(() => {
         (
             async function () {
                 const param_obj = await Promise.resolve(params)
                 const result = await attend_queue(param_obj.id);
-
+                console.log(param_obj.id)
                 setId(param_obj.id)
                 setQueueMembers(result.data)
             }
         )()
+    }, [])
+    useEffect(() => {
         const newChannel = consumer!.cable.subscriptions.create({
-            channel: "ForumChannel",
-            forum_id: "67a9aa930f1e3827e2b2db7f",
-            user: "chukwuka"
+            channel: 'PosQueueChannel',
+            pos_queue_id: id
         },
             {
-                // send: (data: unknown) => console.log("sending data " + data),
-                connected: () => console.log("channel connected"),
+                connected: () => console.log("channel connected" + id),
                 disconnected: () => console.log("channel disconnected"),
-                received: (data) => console.log(`received: ${data}`)
+                received: (data) => { updateQueue(data) }
             });
 
         return () => {
             newChannel.unsubscribe();
         }
-    }, [])
+    }, [id])
+
+    function updateQueue(data: { action: string, message: string }) {
+        if (data.action == "leave")
+            setQueueMembers(prev => prev.filter(m => m.user_id! !== data.message))
+        else if (data.action == "join") {
+            attend_queue(id)
+                .then((result) => setQueueMembers(result.data))
+        }
+    }
+
     return (
         <PageContainer title="Queue Page" description="attending to queue">
             <AttendQueue memberList={queueMembers} id={id} />

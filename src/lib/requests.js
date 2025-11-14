@@ -75,4 +75,17 @@ async function attend_queue(id) {
     return data
 }
 
-export { new_admin, authenticate, get_admin_pos_queues, create_new_pos_queue, attend_queue }
+async function delete_queue(id) {
+    const token = getToken()
+    const auth = {
+        "Authorization": "Bearer " + token,
+        "Seeker": "admin",
+    }
+    const data = await req('DELETE', `pos_queues/${id}`, auth, undefined)
+    console.log("the results from delete")
+    console.log(data)
+    return data
+}
+
+
+export { new_admin, authenticate, get_admin_pos_queues, create_new_pos_queue, attend_queue, delete_queue }

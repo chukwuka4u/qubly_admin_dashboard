@@ -19,13 +19,25 @@ const NewQueuePage = () => {
         current_capacity: "",
         active: false
     });
+    const [submitting, setSubmitting] = React.useState(false)
 
     const router = useRouter();
 
     async function submit() {
-        const result = await create_new_pos_queue(form);
-        console.log(result)
-        router.push("/queues")
+        if (!form.queue_name || !form.queue_capacity)
+            window.alert("fields can't be empty")
+        else
+            try {
+                const result = await create_new_pos_queue(form);
+                console.log(result)
+                router.push("/queues")
+            }
+            catch (e) {
+                console.log(e)
+            }
+            finally {
+                setSubmitting(false)
+            }
     }
 
     return (
@@ -78,7 +90,16 @@ const NewQueuePage = () => {
                         </TextField>
                     </div>
 
-                    <Button onClick={() => submit()} variant="contained" disableElevation color="primary" >
+                    <Button
+
+                        loading={submitting}
+                        sx={{
+                            opacity: submitting ? 0.5 : 1.0,
+                        }}
+                        onClick={() => submit()}
+                        variant="contained"
+                        disableElevation
+                        color="primary" >
                         Create Queue
                     </Button>
                 </Box>

@@ -15,16 +15,15 @@ const QueuesPage = () => {
         (
             async function () {
                 const result = await get_admin_pos_queues();
-                console.log(result)
                 setQueues(result)
             }
         )()
-    }, [])
+    })
 
     return (
         <PageContainer title="Queue Page" description="this is Sample page">
             <DashboardCard title="Queue Page">
-                <Typography>{queues.length} queues</Typography>
+                <Typography>{queues.length ?? 0} queues</Typography>
                 {queues.map((q: Queue, i) =>
                     <QueueCard key={i} q={q} />
                 )}

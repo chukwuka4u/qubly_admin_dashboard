@@ -3,25 +3,22 @@ import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
-import { IconCaretDownFilled } from '@tabler/icons-react';
 import Select from '@mui/material/Select';
 import { MenuItem } from '@mui/material';
-import { delete_queue } from '@/lib/requests';
 import Link from "next/link"
+import { delete_queue } from "@/lib/requests"
+import { useRouter } from "next/navigation"
 
 export default function QueueCard(props: any) {
     const theme = useTheme();
+    const router = useRouter();
     const cardAct = [
         {
             tag: "delete",
             handleClick: async () => {
-                await delete_queue(props.q._id)
+                const result = await delete_queue(props.q._id)
+                router.push("/queues")
             }
         }
     ]

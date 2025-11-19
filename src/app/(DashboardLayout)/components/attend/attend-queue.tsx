@@ -1,5 +1,6 @@
+"use client"
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
-import { CableContext } from '@/context/cable-context';
+import { start_next, completed } from "@/lib/requests"
 import { QueueMember } from '@/types/queue_member';
 import {
     Timeline,
@@ -11,10 +12,31 @@ import {
     TimelineContent,
     timelineOppositeContentClasses,
 } from '@mui/lab';
-import { Button, Link, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
+import { useState } from 'react';
 
+type buttonOptionsProps = "Start" | "Next" | "Finish"
 
 const AttendQueue = ({ memberList, id }: { memberList: QueueMember[] | string, id: string }) => {
+    console.log(memberList)
+    const [buttonOption, setButtonOption] = useState<buttonOptionsProps>("Start")
+    const [servingMember, setServingMember] = useState<QueueMember | null>(null)
+
+    const queue_action = async (id: string) => {
+        const comp = servingMember ? await completed(servingMember?._id, id) : setButtonOption("Next")
+        console.log(comp)
+        const result = await start_next(id)
+        console.log(result)
+        //result should be the current "serving"
+        setServingMember(result.queue_member as QueueMember)
+        updateArray()
+    }
+    const updateArray = () => {
+        const index = (memberList as QueueMember[]).findIndex(obj => obj._id === servingMember!._id);
+        if (index !== -1) {
+            (memberList as QueueMember[])[index] = servingMember!;
+        }
+    }
 
     return (
         <DashboardCard title={"attending to queue #" + id}>
@@ -47,7 +69,7 @@ const AttendQueue = ({ memberList, id }: { memberList: QueueMember[] | string, i
                                 <TimelineItem key={i}>
                                     <TimelineOppositeContent>09:30 am</TimelineOppositeContent>
                                     <TimelineSeparator>
-                                        <TimelineDot color="primary" variant="outlined" />
+                                        <TimelineDot color={v.status == "waiting" ? "primary" : (v.status == "serving" ? "success" : (v.status == "done" ? "grey" : "inherit"))} variant="outlined" />
                                         <TimelineConnector />
                                     </TimelineSeparator>
 
@@ -56,8 +78,11 @@ const AttendQueue = ({ memberList, id }: { memberList: QueueMember[] | string, i
                             )
                     }
                 </Timeline>
-                <Button variant="contained" component={Link} href="/authentication/login" disableElevation color="primary" >
-                    Finish Queue
+                <Button variant="contained" component={Button} onClick={async () => await queue_action(id)} disableElevation color="primary" sx={{
+                    position: "fixed",
+                    top: "50%",
+                }}>
+                    {buttonOption}
                 </Button>
             </>
         </DashboardCard>

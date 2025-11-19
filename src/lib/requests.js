@@ -83,9 +83,31 @@ async function delete_queue(id) {
     }
     const data = await req('DELETE', `pos_queues/${id}`, auth, undefined)
     console.log("the results from delete")
+    return data
+}
+
+async function start_next(id) {
+    const token = getToken()
+    const auth = {
+        "Authorization": "Bearer " + token,
+        "Seeker": "admin",
+    }
+    const params = {}
+    const data = await req('POST', `pos_queues/${id}/start_next`, auth, params)
     console.log(data)
     return data
 }
 
+async function completed(queue_member_id, id) {
+    const token = getToken()
+    const auth = {
+        "Authorization": "Bearer " + token,
+        "Seeker": "admin",
+    }
+    const params = { queue_member_id }
+    const data = await req('POST', `pos_queues/${id}/completed`, auth, params)
+    return data
+}
 
-export { new_admin, authenticate, get_admin_pos_queues, create_new_pos_queue, attend_queue, delete_queue }
+
+export { new_admin, authenticate, get_admin_pos_queues, create_new_pos_queue, attend_queue, delete_queue, start_next, completed }

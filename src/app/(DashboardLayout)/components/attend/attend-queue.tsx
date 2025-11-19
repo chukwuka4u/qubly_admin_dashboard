@@ -13,29 +13,43 @@ import {
     timelineOppositeContentClasses,
 } from '@mui/lab';
 import { Button, Typography } from '@mui/material';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 type buttonOptionsProps = "Start" | "Next" | "Finish"
+type responseObj = {
+    message: string
+    queue_member?: QueueMember
+}
 
-const AttendQueue = ({ memberList, id }: { memberList: QueueMember[] | string, id: string }) => {
-    console.log(memberList)
+const AttendQueue = ({ memberList, setMemberList, id }: { memberList: QueueMember[] | string, setMemberList: Dispatch<SetStateAction<QueueMember[]>>, id: string }) => {
     const [buttonOption, setButtonOption] = useState<buttonOptionsProps>("Start")
-    const [servingMember, setServingMember] = useState<QueueMember | null>(null)
-
     const queue_action = async (id: string) => {
-        const comp = servingMember ? await completed(servingMember?._id, id) : setButtonOption("Next")
-        console.log(comp)
-        const result = await start_next(id)
-        console.log(result)
-        //result should be the current "serving"
-        setServingMember(result.queue_member as QueueMember)
-        updateArray()
+        const list = memberList as QueueMember[]
+        const servingMember = list.find(v => v.status === "serving")
+        const updatedObj: responseObj = servingMember ? await completed(servingMember?._id, id) : setButtonOption("Next")
+
+        const result: responseObj = await start_next(id)
+        updateArray(updatedObj?.queue_member, result?.queue_member)
+        if (result.message == "No waiting users found")
+            setButtonOption("Finish")
+        console.log("the memberhList updated")
+        console.log(memberList)
     }
-    const updateArray = () => {
-        const index = (memberList as QueueMember[]).findIndex(obj => obj._id === servingMember!._id);
-        if (index !== -1) {
-            (memberList as QueueMember[])[index] = servingMember!;
+    const updateArray = (prev?: QueueMember, next?: QueueMember) => {
+        const list = memberList as QueueMember[]
+        if (prev) {
+            const prevIndx = list.findIndex(obj => obj._id === prev!._id);
+            if (prevIndx !== -1) {
+                list[prevIndx] = prev!;
+            }
         }
+        else if (next) {
+            const index = list.findIndex(obj => obj._id === next?._id);
+            if (index !== -1) {
+                list[index] = next!;
+            }
+        }
+        setMemberList([...list])
     }
 
     return (

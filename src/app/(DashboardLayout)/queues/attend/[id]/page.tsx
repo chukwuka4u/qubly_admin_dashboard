@@ -56,7 +56,7 @@ const AttendPage = ({ params }: { params: any }) => {
 
     return (
         <PageContainer title="Queue Page" description="attending to queue">
-            <AttendQueue memberList={queueMembers} id={id} />
+            <AttendQueue memberList={queueMembers} setMemberList={setQueueMembers} id={id} />
         </PageContainer>
     );
 };

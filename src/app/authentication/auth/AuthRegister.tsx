@@ -47,9 +47,6 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
         else if (!isValidEmail(form.email)) {
             window.alert("invalid email format")
         }
-        else if (!isValidPassword()) {
-            window.alert("password must be 8 digits with one symbol, one number and one capital letter")
-        }
         else {
             try {
                 setSubmitting(true)

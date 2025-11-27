@@ -44,7 +44,7 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
     async function submit() {
         if (!form.admin_name || !form.organization || !form.address || !form.email || !form.password || !form.password_confirmation || !form.ranking)
             window.alert("fields can't be empty")
-        else if (!isValidEmail()) {
+        else if (!isValidEmail(form.email)) {
             window.alert("invalid email format")
         }
         else if (!isValidPassword()) {

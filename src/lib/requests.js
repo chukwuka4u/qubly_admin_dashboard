@@ -109,5 +109,25 @@ async function completed(queue_member_id, id) {
     return data
 }
 
+async function overview_analytics() {
+    const token = getToken()
+    const auth = {
+        "Authorization": "Bearer " + token,
+        "Seeker": "admin",
+    }
+    const data = await req('GET', 'analytics', auth, undefined)
+    return data
+}
 
-export { new_admin, authenticate, get_admin_pos_queues, create_new_pos_queue, attend_queue, delete_queue, start_next, completed }
+async function total_per_annum() {
+    const token = getToken()
+    const auth = {
+        "Authorization": "Bearer " + token,
+        "Seeker": "admin",
+    }
+    const data = await req('GET', 'analytics/total_per_annum', auth, undefined)
+    return data
+}
+
+
+export { new_admin, authenticate, get_admin_pos_queues, create_new_pos_queue, attend_queue, delete_queue, start_next, completed, overview_analytics, total_per_annum }

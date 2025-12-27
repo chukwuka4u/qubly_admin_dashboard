@@ -44,6 +44,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         return login
     }
     const signOut = async () => {
+        console.log("signing out")
         clearAdminName();
         clearToken();
         setAdmin("")

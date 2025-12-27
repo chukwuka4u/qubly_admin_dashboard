@@ -90,11 +90,7 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
                             types={["establishment"]}
                             onLoad={ref => (autocompleteRef.current = ref)}
                             onPlaceChanged={() => {
-                                const event = new Event('input', { bubbles: false });
-                                inputRef.current!.dispatchEvent(event);
-                                console.log(inputRef.current!.value)
                                 setForm({ ...form, address: inputRef.current!.value, organization: autocompleteRef.current!.getPlace().name! })
-                                // console.log(form.address)
                             }}
                         >
 
@@ -113,9 +109,7 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
                                     marginTop: '12px',      // my-[12px]
                                     marginBottom: '12px'
                                 }}
-                                onChange={(e) => {
-                                    // console.log(e.target.value)
-                                }}
+                                
                             />
                         </Autocomplete>
                     }

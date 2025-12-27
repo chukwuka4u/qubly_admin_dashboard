@@ -3,16 +3,90 @@ import { Select, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import dynamic from "next/dynamic";
+import { setMaxListeners } from 'events';
+import { Preview } from '@mui/icons-material';
+import { overview_analytics } from '@/lib/requests'
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 
 const SalesOverview = () => {
 
+    const months = [
+        'january',
+        'february',
+        'march',
+        'april',
+        'may',
+        'june',
+        'july',
+        'august',
+        'september',
+        'october',
+        'november',
+        'december'
+    ]
+    const [fetched, setFetched] = React.useState( Array<{day: number, people_count: number, revenue: number}>())
+    React.useEffect(() => {
+        (async function () {
+            const dt = await overview_analytics()
+            console.log(dt)
+            setFetched(dt.data)
+        })()
+    })
+    
     // select
-    const [month, setMonth] = React.useState('1');
+    const [month, setMonth] = React.useState<string>(months[new Date().getMonth()]); //month is being tracked using index from months
+    const [year, setYear] = React.useState(new Date().getFullYear())
 
-    const handleChange = (event: any) => {
-        setMonth(event.target.value);
+    const [days, setDays] = React.useState<number[]>(Array.from({length: 31}, (_, i) => i + 1));
+
+    const nofD = new Date(2025, new Date().getMonth() + 1, 0).getDate()
+
+    // col data
+    const [colChart, setColChart] = React.useState(
+        {
+            customers: new Array(nofD).fill(0),
+            earnings: new Array(nofD).fill(0)
+        }
+    )
+
+    React.useEffect(() => {
+        //loop through all the days, where there is day with record, update the array
+        setColChart(prev => {
+            let newColChart = prev;
+                for (let j = 0; j < fetched.length; j++) {
+                    let k = fetched[j].day
+                    newColChart.earnings[k - 1] = fetched[j].revenue
+                    newColChart.customers[k - 1] = fetched[j].people_count
+                }
+            
+            return newColChart
+        })
+    })
+    
+    const handleChange : any = (e: any) => {
+        const selectedMonth = e.target.value
+        var n : number;
+        switch(selectedMonth) {
+            case 'september':
+                    case 'april':
+                    case 'june':
+                    case 'november':
+                        n = 30
+                        break;
+                    case 'february':
+                        n = 29
+                        break;
+                    default:
+                        n = 31
+                        break;
+        }
+                    
+        const arr = Array.from({length: n}, (_, i) => i + 1)
+        setDays(arr)
+        setMonth(selectedMonth)
+        setColChart({customers: new Array(n).fill(0), earnings: new Array(n).fill(0)})
+        console.log(month)
     };
 
     // chart color
@@ -67,8 +141,9 @@ const SalesOverview = () => {
         yaxis: {
             tickAmount: 4,
         },
+        //choose this days based on available data
         xaxis: {
-            categories: ['16/08', '17/08', '18/08', '19/08', '20/08', '21/08', '22/08', '23/08'],
+            categories: days,
             axisBorder: {
                 show: false,
             },
@@ -80,12 +155,12 @@ const SalesOverview = () => {
     };
     const seriescolumnchart: any = [
         {
-            name: 'Eanings this month',
-            data: [355, 390, 300, 350, 390, 180, 355, 390],
+            name: 'Customers this month',
+            data: colChart.customers, //colChart.customers
         },
         {
-            name: 'Expense this month',
-            data: [280, 250, 325, 215, 250, 310, 280, 250],
+            name: 'Earnings this month',
+            data: colChart.earnings, // colChart.earnings
         },
     ];
 
@@ -99,12 +174,23 @@ const SalesOverview = () => {
                 size="small"
                 onChange={handleChange}
             >
-                <MenuItem value={1}>March 2025</MenuItem>
-                <MenuItem value={2}>April 2025</MenuItem>
-                <MenuItem value={3}>May 2025</MenuItem>
-                <MenuItem value={4}>September 2025</MenuItem>
+                {
+                    months.map((v) => 
+                        <MenuItem value={v}>{v.toUpperCase()} {year}</MenuItem>
+                    )
+                }
             </Select>
         }>
+            <Select
+                label="year"
+                id="year"
+                value={year}
+                size="small"
+                onChange={(e) => setYear(e.target.value)}
+            >
+                <MenuItem value={"2025"}>2025</MenuItem>
+                <MenuItem value={"2026"}>2026</MenuItem>
+            </Select>
             <Chart
                 options={optionscolumnchart}
                 series={seriescolumnchart}

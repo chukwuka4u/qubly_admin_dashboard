@@ -6,7 +6,6 @@ import {
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
-
 const Menuitems = [
   {
     navlabel: true,
@@ -39,7 +38,7 @@ const Menuitems = [
     id: uniqueId(),
     title: "Logout",
     icon: IconLogout,
-    href: "/authentication/login",
+    href: "/authentication/signout"
   }
 
 ];

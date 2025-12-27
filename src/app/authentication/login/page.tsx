@@ -70,7 +70,7 @@ const Login2 = () => {
                       variant="h6"
                       fontWeight="500"
                     >
-                      New to Qubly?
+                      New to WaitWise?
                     </Typography>
                     <Typography
                       component={Link}

@@ -37,8 +37,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const signUp = async (form: any) => {
-        const { adminName, organization, address, email, password, passwordConfirmation } = form
-        const login = await new_admin(adminName, organization, address, email, password, passwordConfirmation)
+        const { admin_Name, organization, address, email, password, passwordConfirmation } = form
+        const login = await new_admin(admin_Name, organization, address, email, password, passwordConfirmation)
         storeAdminName(email)
         setAdmin(email);
         return login

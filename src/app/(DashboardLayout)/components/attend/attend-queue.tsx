@@ -82,12 +82,13 @@ const AttendQueue = ({ memberList, setMemberList, id }: { memberList: QueueMembe
                             memberList.map((v, i) =>
                                 <TimelineItem key={i}>
                                     <TimelineOppositeContent>09:30 am</TimelineOppositeContent>
+                                    <TimelineOppositeContent>{v.status}</TimelineOppositeContent>
                                     <TimelineSeparator>
                                         <TimelineDot color={v.status == "waiting" ? "primary" : (v.status == "serving" ? "success" : (v.status == "done" ? "grey" : "inherit"))} variant="outlined" />
                                         <TimelineConnector />
                                     </TimelineSeparator>
 
-                                    <TimelineContent> <span style={{ marginRight: 100, marginLeft: 100 }}>{v.position}</span>Payment received from John Doe of $385.90</TimelineContent>
+                                    <TimelineContent> <span style={{ marginRight: 100, marginLeft: 100 }}>{v.position}</span>{v.user_id}</TimelineContent>
                                 </TimelineItem>
                             )
                     }
@@ -95,7 +96,9 @@ const AttendQueue = ({ memberList, setMemberList, id }: { memberList: QueueMembe
                 <Button variant="contained" component={Button} onClick={async () => await queue_action(id)} disableElevation color="primary" sx={{
                     position: "fixed",
                     top: "50%",
-                }}>
+                }}
+                    disabled={buttonOption == "Finish"}
+                    >
                     {buttonOption}
                 </Button>
             </>

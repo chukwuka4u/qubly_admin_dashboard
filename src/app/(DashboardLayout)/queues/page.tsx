@@ -15,6 +15,7 @@ const QueuesPage = () => {
         (
             async function () {
                 const result = await get_admin_pos_queues();
+                if (result != undefined)
                 setQueues(result)
             }
         )()

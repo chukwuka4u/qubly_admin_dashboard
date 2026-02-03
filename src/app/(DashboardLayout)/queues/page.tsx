@@ -1,5 +1,5 @@
 'use client';
-import { Typography } from '@mui/material';
+import { List, Typography } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import QueueCard from '../components/queue-container/card';
@@ -19,15 +19,18 @@ const QueuesPage = () => {
                 setQueues(result)
             }
         )()
-    })
+    },[])
 
     return (
         <PageContainer title="Queue Page" description="this is Sample page">
             <DashboardCard title="Queue Page">
                 <Typography>{queues.length ?? 0} queues</Typography>
+                <List>
+
                 {queues.map((q: Queue, i) =>
                     <QueueCard key={i} q={q} />
                 )}
+                </List>
             </DashboardCard>
         </PageContainer>
     );

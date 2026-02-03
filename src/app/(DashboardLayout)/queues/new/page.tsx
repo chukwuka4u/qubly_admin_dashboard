@@ -5,6 +5,8 @@ import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCa
 import { create_new_pos_queue } from '@/lib/requests';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 
 
 const NewQueuePage = () => {
@@ -16,17 +18,17 @@ const NewQueuePage = () => {
     const [form, setForm] = React.useState({
         queue_name: "",
         queue_capacity: "",
-        current_capacity: "",
-        active: false
+        service_start_time: null as PickerValue | null | string
     });
     const [submitting, setSubmitting] = React.useState(false)
 
     const router = useRouter();
 
     async function submit() {
-        if (!form.queue_name || !form.queue_capacity)
+        if (!form.queue_name || !form.queue_capacity || !form.service_start_time)
             window.alert("fields can't be empty")
-        else
+        else {
+            form.service_start_time = (form.service_start_time as PickerValue)!.toISOString()
             try {
                 const result = await create_new_pos_queue(form);
                 console.log(result)
@@ -38,6 +40,7 @@ const NewQueuePage = () => {
             finally {
                 setSubmitting(false)
             }
+        }
     }
 
     return (
@@ -67,31 +70,16 @@ const NewQueuePage = () => {
                                 setForm({ ...form, queue_capacity: e.target.value })
                             }}
                         />
-                        <TextField
-                            id="outlined"
-                            label="current capacity"
-                            type="number"
-                            onChange={(e: any) => {
-                                setForm({ ...form, current_capacity: e.target.value })
-                            }}
-                        />
-                        <TextField
-                            id="outlined-select"
-                            select
-                            defaultValue={status[0]}
-                            // onSelect={}
-                            helperText="Select status"
-                        >
-                            {status.map((v, i) =>
-                                <MenuItem key={i}>
-                                    {v}
-                                </MenuItem>
-                            )}
-                        </TextField>
+                        <Box>
+                        <DateTimePicker 
+                            label="select start date and time"
+                            value={form.service_start_time as PickerValue}
+                            onChange={(v) => setForm({ ...form, service_start_time: v})}
+                         />
+                        </Box>
                     </div>
 
                     <Button
-
                         loading={submitting}
                         sx={{
                             opacity: submitting ? 0.5 : 1.0,

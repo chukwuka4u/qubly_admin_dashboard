@@ -101,7 +101,7 @@ export default function QueueCard(props: any) {
                             </DialogContentText>
                             <div ref={svgRef}>
                             <QRCodeSVG
-                            value={`http://localhost:3000/join?queue_id=${props.q._id}&admin_id=${props.q.admin_id}`}
+                            value={`https://user.waitwise.xyz/?pid=${props.q._id}&aid=${props.q.admin_id}`}
                             size={400}
                             />
                             </div>

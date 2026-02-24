@@ -27,9 +27,8 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
   const [form, setForm] = React.useState({
     email: "",
     password: ""
-  });
+  })
   const [submitting, setSubmitting] = React.useState(false)
-
   const router = useRouter();
   async function submit() {
     console.log(admin, "initial")
@@ -40,7 +39,10 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         setSubmitting(true)
         const result = await signIn(form)
         console.log(result)
-        router.push("/")
+        if (result)
+        router.replace("/")
+      else
+        window.alert("Incorrect email or password")
         console.log(admin)
       }
       catch (e) {

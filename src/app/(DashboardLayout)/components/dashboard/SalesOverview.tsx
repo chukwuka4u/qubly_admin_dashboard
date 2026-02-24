@@ -52,7 +52,7 @@ const SalesOverview = () => {
 
     React.useEffect(() => {
         //loop through all the days, where there is day with record, update the array
-        setColChart(prev => {
+        fetched && setColChart(prev => {
             let newColChart = prev;
                 for (let j = 0; j < fetched.length; j++) {
                     let k = fetched[j].day

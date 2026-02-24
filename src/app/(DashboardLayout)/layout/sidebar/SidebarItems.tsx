@@ -1,4 +1,3 @@
-import React from "react";
 import Menuitems from "./MenuItems";
 import { Box, Button } from "@mui/material";
 import {
@@ -10,12 +9,9 @@ import {
 import { IconPoint } from '@tabler/icons-react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/context/auth-context";
 
 
 const renderMenuItems = (items: any, pathDirect: any) => {
-
-const { signOut } = useAuth()
 
   return items.map((item: any) => {
 
@@ -73,13 +69,9 @@ const SidebarItems = () => {
 
   return (
     < >
-      <MUI_Sidebar width={"100%"} showProfile={false} themeColor={"#5D87FF"} themeSecondaryColor={'#49beff'} >
-
-        {/* <Logo img='/images/logos/dark-logo.svg' style={{ width: 160, height: 160 }} component={Link} to="/" >qubly</Logo> */}
+      <MUI_Sidebar width={"100%"} showProfile={false} themeColor={"#5D87FF"} themeSecondaryColor={'#49beff'}>
         <img src='/images/logos/dark-logo.svg' style={{ width: 200, height: 60, marginLeft: 25 }} />
-
         {renderMenuItems(Menuitems, pathDirect)}
-
       </MUI_Sidebar>
 
     </>

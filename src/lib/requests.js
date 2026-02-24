@@ -22,6 +22,7 @@ async function req(method, uri, auth, params) {
     }
     catch (e) {
         console.log("error -> " + e)
+        return e
     }
 }
 
@@ -36,9 +37,17 @@ async function authenticate(email, password) {
     const params = { email, password }
 
     const data = await req('POST', 'authenticate', undefined, params)
-    storeToken(data.token)
     console.log(data)
-    return data ? true : false;
+    
+    if (data.error == "Unauthorized")
+        return false;
+    else if (data.token) {
+        storeToken(data.token)
+
+        return true;
+    }
+    
+    return false;
 }
 async function get_admin_pos_queues() {
     const token = getToken()

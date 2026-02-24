@@ -24,16 +24,16 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             name && setAdmin(name!.toString())
         }
         else {
-            router.push("/authentication/login")
+            router.replace("/authentication/login")
         }
-    }, [])
+    })
 
     const signIn = async (form: any) => {
         const { email, password } = form
-        const login = await authenticate(email, password)
+        const authorized : boolean = await authenticate(email, password)
         storeAdminName(email)
         setAdmin(email);
-        return login
+        return authorized
     }
 
     const signUp = async (form: any) => {

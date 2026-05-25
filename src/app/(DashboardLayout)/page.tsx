@@ -1,5 +1,5 @@
 'use client'
-import { Grid, Box } from '@mui/material';
+import { Grid, Box, Typography } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 // components
 import SalesOverview from '@/app/(DashboardLayout)/components/dashboard/SalesOverview';
@@ -11,41 +11,66 @@ import { stat } from 'fs';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({people_count: 0, revenue: 0})
+  const [showWelcome, setShowWelcome] = useState(true)
 
   useEffect(() => {
     (async function () {
-                const dt = await total_per_annum()
-                if (dt != undefined)
-                setStats({people_count: dt.people_count, revenue: dt.revenue})
-            })()
+      const dt = await total_per_annum()
+      if (dt != undefined)
+        setStats({people_count: dt.people_count, revenue: dt.revenue})
+    })()
   }, [])
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setShowWelcome(false)
+    }, 3000)
+
+    return () => window.clearTimeout(timer)
+  }, [])
+
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
-      <Box>
-        <Grid container spacing={3}>
-          <Grid
-            size={{
-              xs: 12,
-              lg: 8
-            }}>
-            <SalesOverview />
-          </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              lg: 4
-            }}>
-            <Grid container spacing={3}>
-              <Grid size={12}>
-                <YearlyBreakup people_count={stats.people_count} />
-              </Grid>
-              <Grid size={12}>
-                <MonthlyEarnings revenue={stats.revenue}/>
+      {showWelcome ? (
+        <Box
+          sx={{
+            minHeight: 'calc(100vh - 170px)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="h3" fontWeight={700}>
+            Welcome
+          </Typography>
+        </Box>
+      ) : (
+        <Box>
+          <Grid container spacing={3}>
+            <Grid
+              size={{
+                xs: 12,
+                lg: 8,
+              }}>
+              <SalesOverview />
+            </Grid>
+            <Grid
+              size={{
+                xs: 12,
+                lg: 4,
+              }}>
+              <Grid container spacing={3}>
+                <Grid size={12}>
+                  <YearlyBreakup people_count={stats.people_count} />
+                </Grid>
+                <Grid size={12}>
+                  <MonthlyEarnings revenue={stats.revenue} />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      )}
     </PageContainer>
   );
 }

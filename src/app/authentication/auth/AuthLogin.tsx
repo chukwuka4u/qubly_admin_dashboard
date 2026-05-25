@@ -7,12 +7,14 @@ import {
   Button,
   Stack,
   Checkbox,
+  Icon,
 } from "@mui/material";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+import { IconEye, IconEyeOff } from '@tabler/icons-react';
 
 interface loginType {
   title?: string;
@@ -28,6 +30,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     email: "",
     password: ""
   })
+  const [seePassword, setSeePassword] = React.useState(false)
   const [submitting, setSubmitting] = React.useState(false)
   const router = useRouter();
   async function submit() {
@@ -80,7 +83,11 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             setForm({ ...form, email: e.target.value })
           }} variant="outlined" fullWidth />
         </Box>
-        <Box mt="25px">
+        <Box mt="25px"
+          sx={{
+              position: "relative",
+            }}
+        >
           <Typography
             variant="subtitle1"
             fontWeight={600}
@@ -92,7 +99,17 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
           </Typography>
           <CustomTextField onChange={(e: any) => {
             setForm({ ...form, password: e.target.value })
-          }} type="password" variant="outlined" fullWidth />
+          }} type={seePassword ? "text" : "password"} variant="outlined" fullWidth />
+          <Button
+            onClick={() => setSeePassword(!seePassword)}
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: "40%",
+            }}
+          >
+            {seePassword ? <IconEyeOff /> : <IconEye />}
+          </Button>
         </Box>
         <Stack
           justifyContent="space-between"

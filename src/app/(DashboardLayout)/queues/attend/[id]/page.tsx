@@ -23,7 +23,7 @@ const AttendPage = ({ params }: { params: any }) => {
             async function () {
                 const param_obj = await Promise.resolve(params)
                 const result = await attend_queue(param_obj.id);
-                console.log(param_obj.id)
+                console.log(result.data)
                 setId(param_obj.id)
                 setQueueMembers(result.data)
             }

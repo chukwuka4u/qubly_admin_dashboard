@@ -2,6 +2,7 @@ import { storeToken, getToken } from "@/app/session";
 
 async function req(method, uri, auth, params) {
     const headers = {}
+    headers["Time-Zone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (method == "POST" || method == "PATCH")
         headers["Content-Type"] = "application/json";
     try {
@@ -17,7 +18,6 @@ async function req(method, uri, auth, params) {
             }
         )
         const json = await response.json();
-        console.log(json)
         return json
     }
     catch (e) {
@@ -30,14 +30,12 @@ async function new_admin(admin_name, organization, address, email, password, pas
     const params = { admin_name, organization, address, email, password, password_confirmation, ranking }
     const data = await req('POST', 'new_admin', undefined, params)
     storeToken((data.token))
-    console.log(data)
     return data;
 }
 async function authenticate(email, password) {
     const params = { email, password }
 
     const data = await req('POST', 'authenticate', undefined, params)
-    console.log(data)
     
     if (data.error == "Unauthorized")
         return false;
@@ -56,7 +54,6 @@ async function get_admin_pos_queues() {
         "Seeker": "admin",
     }
     const data = await req('GET', 'pos_queues', auth, undefined)
-    console.log(data)
     return data
 }
 async function create_new_pos_queue(form) {
@@ -69,7 +66,6 @@ async function create_new_pos_queue(form) {
     const params = { pos_queue: {} }
     params.pos_queue = form
     const data = await req('POST', 'pos_queues', auth, form)
-    console.log(data)
     return data ? true : false;
 
 }
@@ -91,7 +87,6 @@ async function delete_queue(id) {
         "Seeker": "admin",
     }
     const data = await req('DELETE', `pos_queues/${id}`, auth, undefined)
-    console.log("the results from delete")
     return data
 }
 
@@ -103,7 +98,6 @@ async function start_next(id) {
     }
     const params = {}
     const data = await req('POST', `pos_queues/${id}/start_next`, auth, params)
-    console.log(data)
     return data
 }
 
@@ -118,13 +112,14 @@ async function completed(queue_member_id, id) {
     return data
 }
 
-async function overview_analytics() {
+async function overview_analytics(year, month) {
     const token = getToken()
     const auth = {
         "Authorization": "Bearer " + token,
         "Seeker": "admin",
     }
-    const data = await req('GET', 'analytics', auth, undefined)
+    const params = { year, month }
+    const data = await req('POST', 'analytics/people_per_month', auth, params)
     return data
 }
 
@@ -135,6 +130,7 @@ async function total_per_annum() {
         "Seeker": "admin",
     }
     const data = await req('GET', 'analytics/total_per_annum', auth, undefined)
+    console.log(data)
     return data
 }
 

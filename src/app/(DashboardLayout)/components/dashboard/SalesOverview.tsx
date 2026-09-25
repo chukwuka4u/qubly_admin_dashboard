@@ -26,21 +26,14 @@ const SalesOverview = () => {
         'december'
     ]
     const [fetched, setFetched] = React.useState( Array<{day: number, people_count: number, revenue: number}>())
-    React.useEffect(() => {
-        (async function () {
-            const dt = await overview_analytics()
-            console.log(dt)
-            setFetched(dt.data)
-        })()
-    })
     
     // select
-    const [month, setMonth] = React.useState<string>(months[new Date().getMonth()]); //month is being tracked using index from months
+    const [month, setMonth] = React.useState<number>(new Date().getMonth()); //month is being tracked using index from months
     const [year, setYear] = React.useState(new Date().getFullYear())
 
     const [days, setDays] = React.useState<number[]>(Array.from({length: 31}, (_, i) => i + 1));
 
-    const nofD = new Date(2025, new Date().getMonth() + 1, 0).getDate()
+    const nofD = new Date(year, new Date().getMonth() + 1, 0).getDate()
 
     // col data
     const [colChart, setColChart] = React.useState(
@@ -51,42 +44,50 @@ const SalesOverview = () => {
     )
 
     React.useEffect(() => {
+        (async function () {
+            const dt = await overview_analytics(year, month)
+            setFetched(dt.data)
+        })()
+    }, [year, month])
+
+    React.useEffect(() => {
         //loop through all the days, where there is day with record, update the array
-        fetched && setColChart(prev => {
-            let newColChart = prev;
-                for (let j = 0; j < fetched.length; j++) {
-                    let k = fetched[j].day
-                    newColChart.earnings[k - 1] = fetched[j].revenue
-                    newColChart.customers[k - 1] = fetched[j].people_count
-                }
-            
+        fetched && setColChart( prev => {
+            let newColChart = {
+                customers: new Array(nofD).fill(0),
+                earnings: new Array(nofD).fill(0)
+            } ;
+            for (let j = 0; j < fetched.length; j++) {
+                let k = fetched[j].day
+                newColChart.earnings[k - 1] = fetched[j].revenue
+                newColChart.customers[k - 1] = fetched[j].people_count
+            }
             return newColChart
         })
-    })
-    
+    }, [fetched])
+        
     const handleChange : any = (e: any) => {
         const selectedMonth = e.target.value
         var n : number;
-        switch(selectedMonth) {
+        switch(months[selectedMonth]) {
             case 'september':
-                    case 'april':
-                    case 'june':
-                    case 'november':
-                        n = 30
-                        break;
-                    case 'february':
-                        n = 29
-                        break;
-                    default:
-                        n = 31
-                        break;
+            case 'april':
+            case 'june':
+            case 'november':
+                n = 30
+                break;
+            case 'february':
+                n = 29
+                break;
+            default:
+                n = 31
+                break;
         }
                     
         const arr = Array.from({length: n}, (_, i) => i + 1)
         setDays(arr)
         setMonth(selectedMonth)
         setColChart({customers: new Array(n).fill(0), earnings: new Array(n).fill(0)})
-        console.log(month)
     };
 
     // chart color
@@ -157,11 +158,7 @@ const SalesOverview = () => {
         {
             name: 'Customers this month',
             data: colChart.customers, //colChart.customers
-        },
-        {
-            name: 'Earnings this month',
-            data: colChart.earnings, // colChart.earnings
-        },
+        }
     ];
 
     return (
@@ -176,7 +173,7 @@ const SalesOverview = () => {
             >
                 {
                     months.map((v) => 
-                        <MenuItem value={v}>{v.toUpperCase()} {year}</MenuItem>
+                        <MenuItem value={months.indexOf(v) + 1}>{v.toUpperCase()} {year}</MenuItem>
                     )
                 }
             </Select>
@@ -190,6 +187,7 @@ const SalesOverview = () => {
             >
                 <MenuItem value={"2025"}>2025</MenuItem>
                 <MenuItem value={"2026"}>2026</MenuItem>
+                <MenuItem value={"2027"}>2027</MenuItem>
             </Select>
             <Chart
                 options={optionscolumnchart}

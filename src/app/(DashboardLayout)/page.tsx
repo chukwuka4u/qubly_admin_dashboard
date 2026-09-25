@@ -32,18 +32,7 @@ const Dashboard = () => {
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
       {showWelcome ? (
-        <Box
-          sx={{
-            minHeight: 'calc(100vh - 170px)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Typography variant="h3" fontWeight={700}>
-            Welcome
-          </Typography>
-        </Box>
+        <div>welcome</div>
       ) : (
         <Box>
           <Grid container spacing={3}>

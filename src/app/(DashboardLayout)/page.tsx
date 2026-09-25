@@ -15,7 +15,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     (async function () {
-      const dt = await total_per_annum()
+      const year = new Date().getFullYear()
+      const dt = await total_per_annum(year)
       if (dt != undefined)
         setStats({people_count: dt.people_count, revenue: dt.revenue})
     })()

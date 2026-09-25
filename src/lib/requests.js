@@ -123,13 +123,14 @@ async function overview_analytics(year, month) {
     return data
 }
 
-async function total_per_annum() {
+async function total_per_annum(year) {
     const token = getToken()
     const auth = {
         "Authorization": "Bearer " + token,
         "Seeker": "admin",
     }
-    const data = await req('GET', 'analytics/total_per_annum', auth, undefined)
+    const params = { year }
+    const data = await req('POST', 'analytics/total_per_annum', auth, params)
     console.log(data)
     return data
 }

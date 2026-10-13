@@ -11,16 +11,17 @@ import { stat } from 'fs';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({people_count: 0, revenue: 0})
+  const [year, setYear] = useState(new Date().getFullYear())
   const [showWelcome, setShowWelcome] = useState(true)
 
   useEffect(() => {
     (async function () {
-      const year = new Date().getFullYear()
       const dt = await total_per_annum(year)
+      console.log(dt)
       if (dt != undefined)
-        setStats({people_count: dt.people_count, revenue: dt.revenue})
+        setStats({people_count: dt.data.people_count, revenue: dt.revenue})
     })()
-  }, [])
+  }, [year])
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -66,21 +67,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard;
-
-{/* <Grid
-            size={{
-              xs: 12,
-              lg: 4
-            }}>
-            <RecentTransactions />
-          </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              lg: 8
-            }}>
-            <ProductPerformance />
-          </Grid>
-          <Grid size={12}>
-            <Blog />
-          </Grid> */}

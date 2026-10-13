@@ -131,7 +131,6 @@ async function total_per_annum(year) {
     }
     const params = { year }
     const data = await req('POST', 'analytics/total_per_annum', auth, params)
-    console.log(data)
     return data
 }
 

@@ -8,6 +8,7 @@ import { IconArrowUpLeft } from '@tabler/icons-react';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 
 const YearlyBreakup = ({ people_count } : {people_count: number}) => {
+  console.log(people_count)
   // chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
@@ -72,7 +73,7 @@ const YearlyBreakup = ({ people_count } : {people_count: number}) => {
             sm: 7
           }}>
           <Typography variant="h3" fontWeight="700">
-            {people_count}
+            {people_count ?? 0}
           </Typography>
           <Typography variant="h3" fontWeight="200">
             customers

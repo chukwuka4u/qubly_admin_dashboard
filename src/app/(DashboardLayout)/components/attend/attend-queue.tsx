@@ -14,6 +14,8 @@ import {
 } from '@mui/lab';
 import { Button, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { IconArrowLeft } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation'
 
 type buttonOptionsProps = "Start" | "Next" | "Finish"
 type responseObj = {
@@ -23,6 +25,7 @@ type responseObj = {
 
 const AttendQueue = ({ memberList, setMemberList, id }: { memberList: QueueMember[] | string, setMemberList: Dispatch<SetStateAction<QueueMember[]>>, id: string }) => {
     const [buttonOption, setButtonOption] = useState<buttonOptionsProps>("Start")
+    const router = useRouter()
     const queue_action = async (id: string) => {
         const list = memberList as QueueMember[]
         const servingMember = list.find(v => v.status === "serving")
@@ -54,6 +57,8 @@ const AttendQueue = ({ memberList, setMemberList, id }: { memberList: QueueMembe
 
     return (
         <DashboardCard title={"attending to queue #" + id}>
+
+            <IconArrowLeft stroke={2} onClick={() => router.back()} />
             <>
                 <Timeline
                     className="theme-timeline"

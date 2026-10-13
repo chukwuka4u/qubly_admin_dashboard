@@ -65,7 +65,7 @@ const SalesOverview = () => {
             return newColChart
         })
     }, [fetched])
-        
+
     const handleChange : any = (e: any) => {
         const selectedMonth = e.target.value
         var n : number;

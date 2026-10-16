@@ -12,6 +12,7 @@ import { CableContext } from '@/context/cable-context';
 const AttendPage = ({ params }: { params: any }) => {
     const [queueMembers, setQueueMembers] = useState<QueueMember[]>([])
     const [id, setId] = useState<string>("")
+    const [queueName, setQueueName] = useState<string>("")
 
     const consumer = useContext(CableContext)
     const [channel, setChannel] = useState<Subscription & { connected: () => void; disconnected: () => void; received: (data: unknown) => void; }>();
@@ -22,10 +23,13 @@ const AttendPage = ({ params }: { params: any }) => {
         (
             async function () {
                 const param_obj = await Promise.resolve(params)
+                const queueParams = new URLSearchParams(window.location.search);
+                const queue_name = queueParams.get("queue_name")
                 const result = await attend_queue(param_obj.id);
-                console.log(result.data)
+                console.log(queue_name)
                 setId(param_obj.id)
                 setQueueMembers(result.data)
+                setQueueName(queue_name || "")
             }
         )()
     }, [])
@@ -56,7 +60,7 @@ const AttendPage = ({ params }: { params: any }) => {
 
     return (
         <PageContainer title="Queue Page" description="attending to queue">
-            <AttendQueue memberList={queueMembers} setMemberList={setQueueMembers} id={id} />
+            <AttendQueue memberList={queueMembers} setMemberList={setQueueMembers} queue_id={id} queueName={queueName} />
         </PageContainer>
     );
 };

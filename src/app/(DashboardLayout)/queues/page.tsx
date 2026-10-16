@@ -22,14 +22,13 @@ const QueuesPage = () => {
     },[])
 
     return (
-        <PageContainer title="Queue Page" description="this is Sample page">
+        <PageContainer title="Queue Page" description="this is a page">
             <DashboardCard title="Queue Page">
                 <Typography>{queues.length ?? 0} queues</Typography>
                 <List>
-
-                {queues.map((q: Queue, i) =>
-                    <QueueCard key={i} q={q} />
-                )}
+                    {queues.map((q: Queue, i) =>
+                        <QueueCard key={i} q={q} />
+                    )}
                 </List>
             </DashboardCard>
         </PageContainer>
